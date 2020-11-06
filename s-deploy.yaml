@@ -1,0 +1,46 @@
+apiVersion: v1
+data:
+  config.env: ENVIRONMENT=staging
+kind: ConfigMap
+metadata:
+  name: nginx-config-k5b9t6hf29
+  namespace: staging
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: nginx
+    project: oicndi2020
+  name: nginx
+  namespace: staging
+spec:
+  ports:
+  - port: 80
+    protocol: TCP
+  selector:
+    app: nginx
+    project: oicndi2020
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    project: oicndi2020
+  name: nginx
+  namespace: staging
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      project: oicndi2020
+  template:
+    metadata:
+      labels:
+        project: oicndi2020
+    spec:
+      containers:
+      - image: nginx:1.14.2
+        name: nginx
+        ports:
+        - containerPort: 80
